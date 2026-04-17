@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Organoid Navigator</title>
 
-  <!-- Inclui o OpenSeadragon -->
+  <!-- Includes OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
   <script src="/organoidviewer.github.io/openseadragon/openseadragon-filtering.js"></script>
 
@@ -222,7 +222,6 @@
       transform: translateX(23px);
     }
 
-    /* Rounded sliders */
     .slider.round {
       border-radius: 34px;
     }
@@ -233,14 +232,14 @@
 
     .switch-label {
       position: relative;
-      left: 0px; /* Adjust if necessary */
+      left: 0px; 
       top: 1px;
       font-family: Helvetica, sans-serif;
       font-size: 15px;
       font-weight: bold;
       color: #333;
-      white-space: nowrap; /* Prevent text from breaking into two lines */
-      display: inline-block; /* Ensure it stays on the same line */
+      white-space: nowrap;
+      display: inline-block;
     } 
 
     .checkbox-org-container {
@@ -301,12 +300,13 @@
     <button id="load-btn" style="padding: 5px 15px; cursor: pointer;">Load Organoid</button>
     </div>
 
-    <!-- Inclui e ajusta o slider de ajuste de foco -->
+    <!-- Box for the focus slider -->
     <div id="focus-container"></div>
     <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
     <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
+    <!-- Gamma adjustment control -->    
     <div id="gamma-container">
       <label class="switch">
         <input type="checkbox">
@@ -315,7 +315,7 @@
       <span class="switch-label">Gamma Tuning</span>
     </div>
 
-    <!-- Inclui as caixas de seleção-->
+    <!-- Selection Boxes -->
     <div class="checkbox-org-container">Classify the organoid above:
       <label class="checkbox-org-label">
         <input type="radio" name="selection-org" value="Acceptable"> Acceptable
@@ -375,10 +375,10 @@
       }
     }
 
+    // Loading organoid
     function loadOrganoid(photoNumber) {
       const num = parseInt(photoNumber, 10);
 
-      // 1) ADJUSTED VALIDATION
       if (isNaN(num) || num < 1 || num > 421) {
         alert("Please enter a valid number between 1 and 421");
         return;
@@ -399,7 +399,7 @@
         immediateRender: true
       });
 
-      // 2) APPLY FILTERS IMMEDIATELY ON LOAD
+      // APPLY FILTERS IMMEDIATELY ON LOAD
       // This ensures if the switch is already "ON", the new image gets filtered
       viewer.addHandler('open', function() {
         applyFilters();

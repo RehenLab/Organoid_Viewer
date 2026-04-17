@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Organoid Navigator</title>
 
-  <!-- Inclui o widget do Jotform -->
+  <!-- Includes Jotform Widget logic -->
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
 
-  <!-- Inclui o OpenSeadragon -->
+  <!-- Includes OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
   <script src="/organoides.github.io/openseadragon/openseadragon-filtering.js"></script>
 
@@ -169,8 +169,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    /* The switch - the box around the slider */
-    .switch {
+     .switch {
       position: relative;
       top: 3px;
       left: 0px;
@@ -179,14 +178,12 @@
       height: 15px;
     }
 
-    /* Hide default HTML checkbox */
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
 
-    /* The slider */
     .slider {
       position: absolute;
       cursor: pointer;
@@ -236,14 +233,14 @@
 
     .switch-label {
       position: relative;
-      left: 0px; /* Adjust if necessary */
+      left: 0px;
       top: 1px;
       font-family: Helvetica, sans-serif;
       font-size: 15px;
       font-weight: bold;
       color: #333;
-      white-space: nowrap; /* Prevent text from breaking into two lines */
-      display: inline-block; /* Ensure it stays on the same line */
+      white-space: nowrap;
+      display: inline-block;
     } 
 
     .checkbox-org-container {
@@ -298,12 +295,13 @@
   <div id="main">
     <h3 id="label">Organoid Classification Section</h3>
 
-    <!-- Inclui e ajusta o slider de ajuste de foco -->
+    <!-- Focus Slider Box -->
     <div id="focus-container"></div>
     <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
     <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
+    <!-- Gamma Switch -->
     <div id="gamma-container">
       <label class="switch">
         <input type="checkbox">
@@ -312,7 +310,7 @@
       <span class="switch-label">Gamma Tuning</span>
     </div>
 
-    <!-- Inclui as caixas de seleção-->
+    <!-- Selection boxes -->
     <div class="checkbox-org-container">Classify the organoid above:
       <label class="checkbox-org-label">
         <input type="radio" name="selection-org" value="Acceptable"> Acceptable
@@ -334,7 +332,7 @@
 
   <script>
     JFCustomWidget.subscribe("ready", function () {
-      // Configuração dos valores a partir das definições do widget no Jotform
+      // Gets organoid values from Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
       const label = `Organoid_${photoNumber}`;
 
@@ -348,10 +346,8 @@
           return response.text();
         })
         .then(csvText => {
-          // Parse CSV text into rows and cells
           const rows = csvText.split("\n").map(row => row.split(","));
 
-          // Find the information corresponding to the "label" variable
           let matchingInfo = "Not found";
           rows.forEach(([variable, info]) => {
             if (variable.trim() === label.trim()) {
@@ -359,7 +355,7 @@
             }
           });
           
-          // Inicializa o OpenSeadragon
+          // Initializes viewer
           var viewer = OpenSeadragon({
             id: "focus-container",
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
@@ -367,10 +363,11 @@
             showNavigator: true,
             maxZoomPixelRatio: 4,
             tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
-            blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+            blendTime: 0.2,
             immediateRender: true
           });
 
+          // Gamma switch logic
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
@@ -391,17 +388,15 @@
             }
           });
 
-          // Função para salvar o estado de zoom
+          // Zoom and panning controls
           function saveZoomState() {
             return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
           }
 
-          // Função para restaurar o estado de zoom
           function restoreZoomState(state) {
             viewer.viewport.zoomTo(state.zoom, state.center);
           }
 
-          // Monitora o slider para mudanças de foco
           document.getElementById("slider").addEventListener('input', function () {
             const focusLevel = this.value;
             const zoomState = saveZoomState();
